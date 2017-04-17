@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultBrowserChanger", "DefaultBrowserChanger\DefaultBrowserChanger.csproj", "{F9E6803A-24F7-4145-B116-A5817AB8DA98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pure Windows API", "ConsoleApp1\Pure Windows API.csproj", "{35C751E3-2006-4A47-9F76-E31A7F9F4C47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Control Panel + UI Automation", "Control Panel + UI Automation\Control Panel + UI Automation.csproj", "{CF29B6D0-EC47-444F-A3AD-C532B51A7420}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9E6803A-24F7-4145-B116-A5817AB8DA98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E6803A-24F7-4145-B116-A5817AB8DA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E6803A-24F7-4145-B116-A5817AB8DA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E6803A-24F7-4145-B116-A5817AB8DA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35C751E3-2006-4A47-9F76-E31A7F9F4C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35C751E3-2006-4A47-9F76-E31A7F9F4C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35C751E3-2006-4A47-9F76-E31A7F9F4C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35C751E3-2006-4A47-9F76-E31A7F9F4C47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF29B6D0-EC47-444F-A3AD-C532B51A7420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF29B6D0-EC47-444F-A3AD-C532B51A7420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF29B6D0-EC47-444F-A3AD-C532B51A7420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF29B6D0-EC47-444F-A3AD-C532B51A7420}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
