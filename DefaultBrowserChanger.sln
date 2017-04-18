@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultBrowserChanger", "DefaultBrowserChanger\DefaultBrowserChanger.csproj", "{F9E6803A-24F7-4145-B116-A5817AB8DA98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings App + UI Automation", "DefaultBrowserChanger\Settings App + UI Automation.csproj", "{F9E6803A-24F7-4145-B116-A5817AB8DA98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pure Windows API", "ConsoleApp1\Pure Windows API.csproj", "{35C751E3-2006-4A47-9F76-E31A7F9F4C47}"
 EndProject

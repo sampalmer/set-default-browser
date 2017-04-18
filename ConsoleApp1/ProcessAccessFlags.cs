@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1
+﻿namespace SetDefaultBrowser
 {
     internal enum ProcessAccessFlags : int
     {

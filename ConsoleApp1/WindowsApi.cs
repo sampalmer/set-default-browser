@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace ConsoleApp1
+namespace SetDefaultBrowser
 {
     class WindowsApi
     {

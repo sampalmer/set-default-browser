@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace SetDefaultBrowser
 {
     class ListView
     {
@@ -24,6 +24,9 @@ namespace ConsoleApp1
             return Process.GetProcessById((int)processId);
         }
 
+        /// <remarks>
+        /// Taken from https://github.com/kvakulo/Switcheroo/blob/master/ManagedWinapi/SystemListView.cs#L75
+        /// </remarks>
         public IEnumerable<string> GetListItems()
         {
             var listViewItemCount = (int)WindowsApi.SendMessage(handle, WindowsApi.LVM_GETITEMCOUNT, IntPtr.Zero, IntPtr.Zero);

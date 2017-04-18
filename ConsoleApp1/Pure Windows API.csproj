@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{35C751E3-2006-4A47-9F76-E31A7F9F4C47}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleApp1</RootNamespace>
-    <AssemblyName>ConsoleApp1</AssemblyName>
+    <RootNamespace>SetDefaultBrowser</RootNamespace>
+    <AssemblyName>SetDefaultBrowser</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -52,6 +52,7 @@
     <Compile Include="Desktop.cs" />
     <Compile Include="DesktopContext.cs" />
     <Compile Include="DesktopProcess.cs" />
+    <Compile Include="EnvironmentException.cs" />
     <Compile Include="ListView.cs" />
     <Compile Include="ProcessAccessFlags.cs" />
     <Compile Include="ProcessMemoryChunk.cs" />

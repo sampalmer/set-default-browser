@@ -1,42 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
-namespace ConsoleApp1
+namespace SetDefaultBrowser
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             try
             {
-                using (var desktop = new Desktop("Default Browser Changer"))
+                if (args.Length != 1)
+                    throw new EnvironmentException($"Usage: {Path.GetFileName(Assembly.GetExecutingAssembly().Location)} browsername");
+
+                Go(args[0]);
+            }
+            catch (EnvironmentException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return 1;
+            }
+            catch //Ensures all nested "finally" blocks execute
+            {
+                throw;
+            }
+
+            return 0;
+        }
+
+        private static void Go(string browserName)
+        {
+            using (var desktop = new Desktop("Default Browser Changer"))
+            {
+                var encodedBrowserName = Uri.EscapeDataString(browserName);
+                var desktopProcess = new DesktopProcess(@"control.exe /name Microsoft.DefaultPrograms /page pageDefaultProgram\pageAdvancedSettings?pszAppName=" + encodedBrowserName, desktop.Name);
+                var exitCode = Wait(() => desktopProcess.GetExitCode()); //TODO: Replace this with WaitForSingleObject
+                if (exitCode != 1) //Control.exe always seems returns 1 regardless of whether it had valid arguments.
+                    throw new Exception("control.exe returned " + exitCode);
+
+                using (new DesktopContext(desktop.Handle))
                 {
-                    //TODO: Make browser name configurable.
-                    //TODO: Detect if the browser isn't found.
-                    var desktopProcess = new DesktopProcess(@"C:\Windows\system32\control.exe /name Microsoft.DefaultPrograms /page pageDefaultProgram\pageAdvancedSettings?pszAppName=google%20chrome", desktop.Name);
-                    var exitCode = Wait(() => desktopProcess.GetExitCode()); //TODO: Replace this with WaitForSingleObject
-                    if (exitCode != 1) //TODO: The fact that it's returning 1 instead of 0 could suggest something's wrong
-                        throw new Exception("Control panel call returned " + exitCode);
-
-                    using (new DesktopContext(desktop.Handle))
+                    IntPtr window;
+                    try
                     {
-                        var window = Wait(() => WindowsApi.FindWindow(IntPtr.Zero, "Set Program Associations"));
+                        window = Wait(() => WindowsApi.FindWindow(IntPtr.Zero, "Set Program Associations"));
+                    }
+                    catch (TimeoutException timeout)
+                    {
+                        throw new EnvironmentException("The control panel applet didn't open. Try logging out and then logging in again.", timeout);
+                    }
 
+                    try
+                    {
+                        var listViewHandle = Wait(() => FindDescendantBy(window, className: "SysListView32"));
+                        var listView = new ListView(listViewHandle);
+                        var save = Wait(() => FindDescendantBy(window, text: "Save"));
+
+
+                        var browserAssociations = new[] { ".htm", ".html", "HTTP", "HTTPS" };
+
+                        int[] checkboxIndices;
                         try
                         {
-                            var listViewHandle = Wait(() => FindDescendantBy(window, className: "SysListView32"));
-                            var listView = new ListView(listViewHandle);
-
-                            var save = Wait(() => FindDescendantBy(window, text: "Save"));
-
-                            var checkboxIndices = Wait(() =>
+                            checkboxIndices = Wait(() =>
                             {
-                                var browserAssociations = new[] { ".htm", ".html", "HTTP", "HTTPS" };
-
                                 var itemIndices =
                                 (
                                     from item in listView.GetListItems().Select((text, index) => new { text, index })
@@ -49,22 +82,22 @@ namespace ConsoleApp1
                                 else
                                     return itemIndices;
                             });
-
-                            foreach (var i in checkboxIndices)
-                                listView.CheckItem(i);
-
-                            WindowsApi.SendMessage(save, WindowsApi.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
                         }
-                        finally
+                        catch (TimeoutException timeout)
                         {
-                            WindowsApi.SendMessage(window, WindowsApi.WM_CLOSE, IntPtr.Zero, IntPtr.Zero); //Just in case it doesn't close itself
+                            throw new EnvironmentException($"Didn't find all of the following extensions and protocols: {String.Join(", ", browserAssociations)}. Please ensure '{browserName}' is:\n1. Spelled correctly\n2. Installed\n3. A browser", timeout);
                         }
+
+                        foreach (var i in checkboxIndices)
+                            listView.CheckItem(i);
+
+                        WindowsApi.SendMessage(save, WindowsApi.BM_CLICK, IntPtr.Zero, IntPtr.Zero);
+                    }
+                    finally
+                    {
+                        WindowsApi.SendMessage(window, WindowsApi.WM_CLOSE, IntPtr.Zero, IntPtr.Zero); //Just in case it doesn't close itself
                     }
                 }
-            }
-            catch //Ensures all nested finally blocks execute
-            {
-                throw;
             }
         }
 
@@ -91,6 +124,8 @@ namespace ConsoleApp1
 
         public static T Wait<T>(Func<T> action)
         {
+            var timeout = TimeSpan.FromSeconds(5);
+
             var stopwatch = Stopwatch.StartNew();
 
             do
@@ -100,9 +135,9 @@ namespace ConsoleApp1
                     return result;
 
                 Thread.Sleep(1);
-            } while (stopwatch.Elapsed < TimeSpan.FromSeconds(5));
+            } while (stopwatch.Elapsed < timeout);
 
-            throw new TimeoutException();
+            throw new TimeoutException($"Operation took longer than {timeout}.");
         }
     }
 }

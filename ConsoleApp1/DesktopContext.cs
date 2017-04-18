@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace SetDefaultBrowser
 {
     /// <summary>
     /// Temporarily switches the current thread's desktop.

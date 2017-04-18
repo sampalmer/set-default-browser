@@ -3,12 +3,15 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace ConsoleApp1
+namespace SetDefaultBrowser
 {
     /// <summary>
     /// A chunk in another processes memory. Mostly used to allocate buffers
     /// in another process for sending messages to its windows.
     /// </summary>
+    /// <remarks>
+    /// Taken from https://github.com/kvakulo/Switcheroo/blob/master/ManagedWinapi/ProcessMemoryChunk.cs
+    /// </remarks>
     public class ProcessMemoryChunk : IDisposable
     {
         readonly Process process;

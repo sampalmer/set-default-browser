@@ -24,7 +24,7 @@ namespace DefaultBrowserChanger
                     out var pid
                 );
 
-                var uiAutomation = new CUIAutomation8Class();
+                var uiAutomation = new CUIAutomationClass();
 
                 var window = FindAndWait(uiAutomation.GetRootElement(), TreeScope.TreeScope_Children, uiAutomation.CreatePropertyCondition(UIA_PropertyIds.UIA_NamePropertyId, "Settings"), TimeSpan.FromSeconds(3));
                 try
