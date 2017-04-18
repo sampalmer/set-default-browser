@@ -17,7 +17,7 @@ namespace SetDefaultBrowser
             try
             {
                 if (args.Length != 1)
-                    throw new EnvironmentException($"Usage: {Path.GetFileName(Assembly.GetExecutingAssembly().Location)} browsername");
+                    throw new EnvironmentException($"Sets the default browser\n\nUsage: {Path.GetFileName(Assembly.GetExecutingAssembly().Location)} browsername\nbrowsername: The name of the browser as shown in Windows' \"Set Default Programs\" screen, such as \"Google Chrome\" or \"Firefox\".");
 
                 Go(args[0]);
             }

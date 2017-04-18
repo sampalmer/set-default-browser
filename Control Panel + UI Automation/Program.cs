@@ -32,19 +32,19 @@ namespace Control_Panel___UI_Automation
 
                     var listItems = new[]
                     {
-                    ".htm",
-                    ".html",
-                    "HTTP",
-                    "HTTPS",
-                }.Select(name => FindAndWait(
-                    listView,
-                    TreeScope.TreeScope_Descendants,
-                    uiAutomation.CreateAndCondition(
-                        uiAutomation.CreatePropertyCondition(UIA_PropertyIds.UIA_NamePropertyId, name),
-                        uiAutomation.CreatePropertyCondition(UIA_PropertyIds.UIA_ControlTypePropertyId, UIA_ControlTypeIds.UIA_ListItemControlTypeId)
-                    ),
-                    TimeSpan.FromSeconds(3)
-                )).ToArray();
+                        ".htm",
+                        ".html",
+                        "HTTP",
+                        "HTTPS",
+                    }.Select(name => FindAndWait(
+                        listView,
+                        TreeScope.TreeScope_Descendants,
+                        uiAutomation.CreateAndCondition(
+                            uiAutomation.CreatePropertyCondition(UIA_PropertyIds.UIA_NamePropertyId, name),
+                            uiAutomation.CreatePropertyCondition(UIA_PropertyIds.UIA_ControlTypePropertyId, UIA_ControlTypeIds.UIA_ListItemControlTypeId)
+                        ),
+                        TimeSpan.FromSeconds(3)
+                    )).ToArray();
 
                     foreach (var listItem in listItems)
                     {
