@@ -5,7 +5,7 @@ Silently sets the default web browser in Windows 10
 .NET Framework 4.5.2
 
 # Download
-[Latest version](/releases/latest)
+See [Releases](https://github.com/sampalmer/windows-change-default-browser/releases)
 
 # Usage
 `SetDefaultBrowser "Google Chrome"` where the name of the browser is as shown in Windows' *Set Default Programs* screen.
