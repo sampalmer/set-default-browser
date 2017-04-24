@@ -8,7 +8,11 @@ Silently sets the default web browser in Windows 10
 See [Releases](https://github.com/sampalmer/windows-change-default-browser/releases)
 
 # Usage
-`SetDefaultBrowser "Google Chrome"` where the name of the browser is as shown in Windows' *Set Default Programs* screen.
+Either:
+* `SetDefaultBrowser "Google Chrome"`
+* `SetDefaultBrowser "Google Chrome" /silent`
+
+Where the name of the browser is as shown in Windows' *Set Default Programs* screen.
 
 # Compatibility
 Written for Windows 10. Works by automating the Control Panel user interface, so this may stop working in a future Windows update.
