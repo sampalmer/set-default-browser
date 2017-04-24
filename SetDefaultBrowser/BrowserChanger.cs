@@ -15,6 +15,10 @@ namespace SetDefaultBrowser
         /// </exception>
         public static void Set(string browserName)
         {
+            //This is needed since the control panel applet can crash if you give it an empty browser name
+            if (String.IsNullOrWhiteSpace(browserName))
+                throw new EnvironmentException($"The given browser name was blank.");
+
             using (var desktop = new Desktop("Default Browser Changer"))
             {
                 var encodedBrowserName = Uri.EscapeDataString(browserName);
