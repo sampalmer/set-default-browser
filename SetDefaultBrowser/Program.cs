@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -6,23 +7,24 @@ namespace SetDefaultBrowser
 {
     class Program
     {
-        static int Main(string[] args)
+        static int Main(string[] rawArgs)
         {
-            if (args.Length != 1)
+            var args = Args.TryParse(rawArgs);
+            if (args == null)
             {
-                var usageText = $"Sets the default browser\n\nUsage: {Path.GetFileName(Application.Location)} browsername\nbrowsername: The name of the browser as shown in Windows' \"Set Default Programs\" screen, such as \"Google Chrome\" or \"Firefox\".";
-
-                MessageBox.Show(text: usageText, caption: ApplicationTitle, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+                //Using message boxes for output so we don't have to show a console window.
+                MessageBox.Show(text: Args.UsageText, caption: ApplicationTitle, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
                 return 1;
             }
 
             try
             {
-                DefaultBrowserChanger.Set(browserName: args[0]);
+                DefaultBrowserChanger.Set(args.BrowserName);
             }
             catch (EnvironmentException ex)
             {
-                MessageBox.Show(text: ex.Message, caption: ApplicationTitle, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                if (!args.Silent)
+                    MessageBox.Show(text: ex.Message, caption: ApplicationTitle, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                 return 1;
             }
             catch //Ensures all nested "finally" blocks execute
@@ -33,7 +35,6 @@ namespace SetDefaultBrowser
             return 0;
         }
 
-        private static Assembly Application => Assembly.GetEntryAssembly();
-        private static string ApplicationTitle => Application.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+        private static string ApplicationTitle => Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
     }
 }
