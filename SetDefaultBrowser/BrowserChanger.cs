@@ -24,7 +24,7 @@ namespace SetDefaultBrowser
                 var encodedBrowserName = Uri.EscapeDataString(browserName);
                 var desktopProcess = new DesktopProcess(@"control.exe /name Microsoft.DefaultPrograms /page pageDefaultProgram\pageAdvancedSettings?pszAppName=" + encodedBrowserName, desktop.Name);
                 var exitCode = Wait(() => desktopProcess.GetExitCode()); //TODO: Replace this with WaitForSingleObject
-                if (exitCode != 1) //Control.exe always seems returns 1 regardless of whether it had valid arguments.
+                if (exitCode != 1) //Control.exe always returns 1 regardless of whether it had valid arguments.
                     throw new Exception("control.exe returned " + exitCode);
 
                 using (new DesktopContext(desktop.Handle))
