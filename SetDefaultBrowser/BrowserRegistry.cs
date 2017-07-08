@@ -18,7 +18,12 @@ namespace SetDefaultBrowser
             {
                 var capabilities = TryGetCapabilities(registeredApplication.Value);
                 if (capabilities != null)
-                    if (capabilities.DisplayName != null && capabilities.Associations.Contains("http", StringComparer.OrdinalIgnoreCase))
+                    if (
+                        capabilities.DisplayName != null
+                        &&
+                        // These protocols are needed for Windows to see it as a web browser.
+                        new[] { "http", "https" }.All(protocol => capabilities.Associations.Contains(protocol, StringComparer.OrdinalIgnoreCase))
+                    )
                         results.Add(new Browser
                         {
                             UniqueApplicationName = registeredApplication.Key,
