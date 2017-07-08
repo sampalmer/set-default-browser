@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -9,17 +11,27 @@ namespace SetDefaultBrowser
     {
         static int Main(string[] rawArgs)
         {
+            var browsers = BrowserRegistry.GetInstalledBrowsers();
+
             var args = Args.TryParse(rawArgs);
             if (args == null)
             {
                 //Using message boxes for output so we don't have to show a console window.
-                MessageBox.Show(text: Args.UsageText, caption: ApplicationTitle, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+                MessageBox.Show(text: Args.GetUsageText(FormattedInstalledBrowsers(browsers)), caption: ApplicationTitle, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
                 return 1;
             }
 
             try
             {
-                DefaultBrowserChanger.Set(args.BrowserName);
+                if (!browsers.Any())
+                    throw new EnvironmentException("Didn't find any web browsers installed.");
+
+                //Using a current culture string comparison here since we're comparing user input against display text.
+                var browser = browsers.FirstOrDefault(b => b.Capabilities.DisplayName.Equals(args.BrowserName, StringComparison.CurrentCulture));
+                if (browser == null)
+                    throw new EnvironmentException($"Didn't find a web browser with the name '{args.BrowserName}'.\n\nPlease use one of the following:\n{FormattedInstalledBrowsers(browsers)}");
+
+                DefaultBrowserChanger.Set(browser);
             }
             catch (EnvironmentException ex)
             {
@@ -36,5 +48,9 @@ namespace SetDefaultBrowser
         }
 
         private static string ApplicationTitle => Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
+        private static string FormattedInstalledBrowsers(IEnumerable<Browser> browsers)
+        {
+            return String.Join("\n", browsers.Select(browser => "• " + browser.Capabilities.DisplayName).Distinct().OrderBy(n => n));
+        }
     }
 }
