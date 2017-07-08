@@ -10,18 +10,19 @@ namespace SetDefaultBrowser
 {
     static class DefaultBrowserChanger
     {
+        /// <param name="browser"></param>
         /// <exception cref="EnvironmentException">
-        /// When there is a problem with either <paramref name="browserName"/> or the hosting environment.
+        /// When there is a problem with either <paramref name="browser"/> or the hosting environment.
         /// </exception>
-        public static void Set(string browserName)
+        public static void Set(Browser browser)
         {
-            //This is needed since the control panel applet can crash if you give it an empty browser name
-            if (String.IsNullOrWhiteSpace(browserName))
-                throw new EnvironmentException($"The given browser name was blank.");
+            // This is needed since the control panel applet can crash if you give it an empty browser name
+            if (String.IsNullOrWhiteSpace(browser.UniqueApplicationName))
+                throw new EnvironmentException($"The given browser's unique application name is blank.");
 
             using (var desktop = new Desktop("Default Browser Changer"))
             {
-                var encodedBrowserName = Uri.EscapeDataString(browserName);
+                var encodedBrowserName = Uri.EscapeDataString(browser.UniqueApplicationName);
                 var desktopProcess = new DesktopProcess(@"control.exe /name Microsoft.DefaultPrograms /page pageDefaultProgram\pageAdvancedSettings?pszAppName=" + encodedBrowserName, desktop.Name);
                 var exitCode = Wait(() => desktopProcess.GetExitCode()); //TODO: Replace this with WaitForSingleObject
                 if (exitCode != 1) //Control.exe always returns 1 regardless of whether it had valid arguments.
@@ -45,8 +46,9 @@ namespace SetDefaultBrowser
                         var listView = new ListView(listViewHandle);
                         var save = Wait(() => FindDescendantBy(window, text: "Save"));
 
-
-                        var browserAssociations = new[] { ".htm", ".html", "HTTP", "HTTPS" };
+                        var browserAssociations = browser.Capabilities.Associations
+                            .Intersect(new[] { ".htm", ".html", "HTTP", "HTTPS" }, StringComparer.OrdinalIgnoreCase)
+                            .ToArray();
 
                         int[] checkboxIndices;
                         try
@@ -68,7 +70,7 @@ namespace SetDefaultBrowser
                         }
                         catch (TimeoutException timeout)
                         {
-                            throw new EnvironmentException($"Didn't find all of the following extensions and protocols: {String.Join(", ", browserAssociations)}. Please ensure '{browserName}' is:\n1. Spelled correctly\n2. Installed\n3. A browser", timeout);
+                            throw new EnvironmentException($"Didn't find all of the following extensions and protocols: {String.Join(", ", browserAssociations)}.", timeout);
                         }
 
                         foreach (var i in checkboxIndices)
