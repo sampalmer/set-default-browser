@@ -35,18 +35,33 @@ namespace SetDefaultBrowser
             return result;
         }
 
-        public static string UsageText
+        public static string GetUsageText(string formattedBrowserList)
         {
-            get
-            {
-                return $@"Sets the default browser
+            var browserNameHelp = String.IsNullOrWhiteSpace(formattedBrowserList)
+                ?
+                "The name of the browser as shown in Windows' \"Set Default Programs\" screen"
+                :
+                "One of the following:\n" + IndentBy(formattedBrowserList, 8);
 
-Usage: {Path.GetFileName(Assembly.GetEntryAssembly().Location)} browsername [{silentSwitch}]
+            return $@"Sets the default browser
 
-    browsername: The name of the browser as shown in Windows' ""Set Default Programs"" screen, such as ""Google Chrome"" or ""Firefox"".
+Usage: {Path.GetFileName(Assembly.GetEntryAssembly().Location)} browser [{silentSwitch}]
+
+    browser: {browserNameHelp}
     {silentSwitch}: Don't show error messages or usage help (optional)
 ";
-            }
+        }
+
+        private static string IndentBy(string text, int indentSize)
+        {
+            var lineSeparator = '\n';
+            var indentation = new string(' ', indentSize);
+
+            return string.Join(lineSeparator.ToString(),
+                text
+                    .Split(lineSeparator)
+                    .Select(line => indentation + line)
+            );
         }
     }
 }
