@@ -46,7 +46,7 @@ namespace SetDefaultBrowser
                         var listView = new ListView(listViewHandle);
                         var save = Wait(() => FindDescendantBy(window, text: "Save"));
 
-                        var browserAssociations = browser.Capabilities.Associations
+                        var browserAssociations = browser.Associations
                             .Intersect(new[] { ".htm", ".html", "HTTP", "HTTPS" }, StringComparer.OrdinalIgnoreCase)
                             .ToArray();
 
