@@ -27,7 +27,7 @@ namespace SetDefaultBrowser
                     throw new EnvironmentException("Didn't find any web browsers installed.");
 
                 //Using a current culture string comparison here since we're comparing user input against display text.
-                var browser = browsers.FirstOrDefault(b => b.Capabilities.DisplayName.Equals(args.BrowserName, StringComparison.CurrentCulture));
+                var browser = browsers.FirstOrDefault(b => b.DisplayName.Equals(args.BrowserName, StringComparison.CurrentCulture));
                 if (browser == null)
                     throw new EnvironmentException($"Didn't find a web browser with the name '{args.BrowserName}'.\n\nPlease use one of the following:\n{FormattedInstalledBrowsers(browsers)}");
 
@@ -50,7 +50,7 @@ namespace SetDefaultBrowser
         private static string ApplicationTitle => Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
         private static string FormattedInstalledBrowsers(IEnumerable<Browser> browsers)
         {
-            return String.Join("\n", browsers.Select(browser => "• " + browser.Capabilities.DisplayName).Distinct().OrderBy(n => n));
+            return String.Join("\n", browsers.Select(browser => "• " + browser.DisplayName).Distinct().OrderBy(n => n));
         }
     }
 }
