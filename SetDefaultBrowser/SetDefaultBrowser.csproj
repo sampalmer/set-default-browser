@@ -50,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationCapabilities.cs" />
     <Compile Include="Args.cs" />
     <Compile Include="Browser.cs" />
     <Compile Include="DefaultBrowserChanger.cs" />
