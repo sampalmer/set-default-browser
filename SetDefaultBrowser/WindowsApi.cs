@@ -9,7 +9,7 @@ namespace SetDefaultBrowser
     class WindowsApi
     {
         [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
-        public static extern IntPtr FindWindow(IntPtr lpClassName, string lpWindowName);
+        public static extern IntPtr FindWindow(string lpClassName, IntPtr lpWindowName);
 
         public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
 

@@ -33,7 +33,8 @@ namespace SetDefaultBrowser
                     IntPtr window;
                     try
                     {
-                        window = Wait(() => WindowsApi.FindWindow(IntPtr.Zero, "Set Program Associations"));
+                        // The window is located by class name rather than caption since the caption is locale-dependent.
+                        window = Wait(() => WindowsApi.FindWindow("CabinetWClass" /* Windows Explorer */, IntPtr.Zero));
                     }
                     catch (TimeoutException timeout)
                     {
@@ -42,9 +43,30 @@ namespace SetDefaultBrowser
 
                     try
                     {
-                        var listViewHandle = Wait(() => FindDescendantBy(window, className: "SysListView32"));
+                        var listViewHandle = Wait(() =>
+                        {
+                            var matches = FindDescendantsBy(window, className: "SysListView32");
+                            var expectedListBoxCount = 1;
+                            if (matches.Count > expectedListBoxCount)
+                                throw new Exception($"Found {matches.Count} list box(es), but expected {expectedListBoxCount}.");
+
+                            return matches.FirstOrDefault();
+                        });
+
                         var listView = new ListView(listViewHandle);
-                        var save = Wait(() => FindDescendantBy(window, text: "Save"));
+
+                        var save = Wait(() =>
+                        {
+                            var matches = FindDescendantsBy(window, className: "Button");
+                            if (matches.Count == 0)
+                                return default(IntPtr);
+
+                            var expectedButtonCount = 3; // Select All, Save, Cancel
+                            if (matches.Count != expectedButtonCount)
+                                throw new Exception($"Found {matches} button(s), but expected {expectedButtonCount}.");
+
+                            return matches[1];
+                        });
 
                         var browserAssociations = browser.Associations
                             .Intersect(new[] { ".htm", ".html", "HTTP", "HTTPS" }, StringComparer.OrdinalIgnoreCase)
@@ -86,7 +108,7 @@ namespace SetDefaultBrowser
             }
         }
 
-        private static IntPtr FindDescendantBy(IntPtr parent, string className = null, string text = null)
+        private static List<IntPtr> FindDescendantsBy(IntPtr parent, string className = null, string text = null)
         {
             var matches = new List<IntPtr>();
             WindowsApi.EnumChildWindows(parent, (handle, pointer) =>
@@ -101,10 +123,7 @@ namespace SetDefaultBrowser
                 return true;
             }, IntPtr.Zero);
 
-            if (matches.Count > 1)
-                throw new Exception($"Found {matches.Count} matching descendants.");
-
-            return matches.FirstOrDefault();
+            return matches;
         }
 
         private static T Wait<T>(Func<T> action)
