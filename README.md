@@ -14,3 +14,6 @@ Run the program without any arguments for more information.
 
 # Compatibility
 Written for Windows 10. Works by automating the Control Panel user interface, so this may stop working in a future Windows update.
+
+# Alternative
+It looks like someone else has made a similar app with the same name. That one claims to change the default browser directly rather than using UI automation, so it might be more reliable than this one. You can get it [here](http://kolbi.cz/blog/?p=396). Please note that I have not tested it myself.
