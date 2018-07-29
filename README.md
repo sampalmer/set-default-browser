@@ -2,7 +2,7 @@
 Silently sets the default web browser in Windows 10
 
 # Requirements
-.NET Framework 4.5.2
+Windows 10 version 1709 or below. **Versions 1803 and higher are not supported.**
 
 # Download
 See [Releases](https://github.com/sampalmer/windows-change-default-browser/releases)
