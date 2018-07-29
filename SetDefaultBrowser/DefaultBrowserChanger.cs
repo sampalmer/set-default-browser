@@ -16,6 +16,13 @@ namespace SetDefaultBrowser
         /// </exception>
         public static void Set(Browser browser)
         {
+            // In Windows 10 version 1803, the old control-panel-style Default Programs screen has been replaced with a new one inside the Windows 10 settings app.
+            // However, the Windows 10 settings app cannot be automated without the user seeing it or interacting with it, so that option is unreliable.
+            // Fortunately, someone else has written a better alternative to this app (http://kolbi.cz/blog/?p=396).
+            // So for these reasons, this app won't support this or later versions of Windows.
+            if (OsInfo.Windows10Version >= 1803)
+                throw new EnvironmentException($"This app no longer works in this version of Windows.");
+
             // This is needed since the control panel applet can crash if you give it an empty browser name
             if (String.IsNullOrWhiteSpace(browser.UniqueApplicationName))
                 throw new EnvironmentException($"The given browser's unique application name is blank.");
