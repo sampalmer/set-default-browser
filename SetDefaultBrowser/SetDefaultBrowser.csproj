@@ -59,6 +59,7 @@
     <Compile Include="DesktopProcess.cs" />
     <Compile Include="EnvironmentException.cs" />
     <Compile Include="ListView.cs" />
+    <Compile Include="OsInfo.cs" />
     <Compile Include="ProcessAccessFlags.cs" />
     <Compile Include="ProcessMemoryChunk.cs" />
     <Compile Include="Program.cs" />
